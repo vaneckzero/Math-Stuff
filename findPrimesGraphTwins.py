@@ -17,32 +17,33 @@ def is_prime(n):
 init()  # Initialize colorama
 
 number = int(input("Enter a starting number: "))
-previous_prime = None
-primes = []
-prime_gaps = []
+previous_twin_prime = None
+twin_primes_x = []
+twin_primes_y = []
 
 try:
     while True:
         number += 1
         if is_prime(number):
-            prime_gap = number - previous_prime if previous_prime else None
-            primes.append(number)
-            prime_gaps.append(prime_gap)
-            prime_info = f"{number} ({prime_gap})" if prime_gap else str(number)
-            if previous_prime and prime_gap == 2:
-                prime_info = f"{Fore.RED}{prime_info}{Style.RESET_ALL}"
-            print(prime_info)
-            sys.stdout.write('\a')  # Beep the console
-            sys.stdout.flush()  # Flush the output to ensure the beep is heard
-            previous_prime = number
+            if previous_twin_prime and number - previous_twin_prime == 2:
+                twin_primes_x.append(number)
+                twin_primes_y.append(number - previous_twin_prime)
 
-            # Plot the graph after every 5 primes
-            if len(primes) % 5 == 0:
-                plt.scatter(primes, prime_gaps)
-                plt.xlabel("Prime Number")
-                plt.ylabel("Prime Gap")
-                plt.title("Prime Numbers and Prime Gaps")
+                # Plot the graph after every twin prime
+                plt.scatter(twin_primes_x, twin_primes_y)
+                plt.xlabel("Twin Prime")
+                plt.ylabel("Distance from Last Twin Prime")
+                plt.title("Twin Primes and Distance from Last Twin Prime")
                 plt.show()
+
+            prime_info = f"{number}"
+            if previous_twin_prime and number - previous_twin_prime == 2:
+                prime_info = f"{Fore.RED}{prime_info}{Style.RESET_ALL}"
+                sys.stdout.write('\a')  # Beep the console
+                sys.stdout.flush()  # Flush the output to ensure the beep is heard
+                previous_twin_prime = number
+
+            print(prime_info)
 
         time.sleep(0.25)  # Pause for 0.25 seconds between each iteration
 
@@ -54,4 +55,3 @@ if os.name == 'nt':
     import msvcrt
     while msvcrt.kbhit():
         msvcrt.getch()
-
